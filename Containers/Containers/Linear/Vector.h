@@ -6,16 +6,23 @@
 
 template <typename T> class Vector {
 public:
+	typedef T value_type;
 
 	//default constructor
 	Vector() :elements(nullptr), first_free(nullptr), cap(nullptr) {}
-	//Vector(initializer_list<T>);
+	Vector(std::initializer_list<T> il) : elements(nullptr), first_free(nullptr), cap(nullptr) 
+	{
+		for (auto x : il) {
+			this->push_back(x);
+		}
+	};
 	//copy constructor
 	Vector(const Vector<T>&);
 
 	~Vector();
 
 	Vector<T> &operator=(const Vector<T>&); // copy assignment
+	//Vector<T> &operator=(Vector<T>&&); //move assignment
 
 	//Vector<T> &operator[](size_t pos);
 	//const Vector<T> &operator[](size_t pos) const;
@@ -41,15 +48,11 @@ private:
 	T* cap;
 };
 
-
+//define the static member allocator
 template <typename T>
 std::allocator<T> Vector<T>::alloc = std::allocator<T>();
-//template<typename T>
-//inline Vector<T>::Vector(initializer_list<T> ilist)
-//{
 
-//}
-
+//copy constructor
 template<typename T>
 inline Vector<T>::Vector(const Vector<T> &s)
 {
@@ -58,12 +61,14 @@ inline Vector<T>::Vector(const Vector<T> &s)
 	first_free = cap = newdata.second;
 }
 
+//destructor
 template<typename T>
 inline Vector<T>::~Vector()
 {
 	free();
 }
 
+//copy assignment
 template<typename T>
 inline Vector<T>& Vector<T>::operator=(const Vector<T> &rhs)
 {
@@ -74,6 +79,7 @@ inline Vector<T>& Vector<T>::operator=(const Vector<T> &rhs)
 	return *this;
 }
 
+//push_back
 template<typename T>
 inline void Vector<T>::push_back(const T & v)
 {
@@ -81,11 +87,12 @@ inline void Vector<T>::push_back(const T & v)
 	alloc.construct(first_free++, v);
 }
 
+
 template<typename T>
 inline std::pair<T*, T*> Vector<T>::alloc_n_copy(const T *b, const T *e)
 {
 	auto data = alloc.allocate(e - b);
-	return{ data, uninitialized_copty(b, e, data) };
+	return{ data, uninitialized_copy(b, e, data) };
 }
 
 template<typename T>
