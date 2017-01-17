@@ -24,8 +24,8 @@ public:
 	Vector<T> &operator=(const Vector<T>&); // copy assignment
 	//Vector<T> &operator=(Vector<T>&&); //move assignment
 
-	//Vector<T> &operator[](size_t pos);
-	//const Vector<T> &operator[](size_t pos) const;
+	T &operator[](size_t pos);
+	const T &operator[](size_t pos) const;
 
 	size_t size() const { return first_free - elements; }
 	size_t capacity() const { return cap - elements; }
@@ -33,7 +33,7 @@ public:
 	T* end() const { return first_free; }
 
 	void push_back(const T&);
-	//void pop_back();
+	T pop_back();
 
 
 
@@ -79,12 +79,37 @@ inline Vector<T>& Vector<T>::operator=(const Vector<T> &rhs)
 	return *this;
 }
 
+template<typename T>
+inline T & Vector<T>::operator[](size_t pos)
+{
+	if (pos >= size()) throw std::out_of_range("position out of range!");
+
+	return *(elements + pos);
+}
+
+template<typename T>
+inline const T & Vector<T>::operator[](size_t pos) const
+{
+	if (pos >= size()) throw std::out_of_range("position out of range!");
+
+	return *(elements + pos);
+}
+
 //push_back
 template<typename T>
 inline void Vector<T>::push_back(const T & v)
 {
 	chk_n_alloc();
 	alloc.construct(first_free++, v);
+}
+
+template<typename T>
+inline T Vector<T>::pop_back()
+{
+	if (!size()) throw std::out_of_range("popping elements from empty vector");
+	auto ret = *(--first_free);
+	alloc.destroy(first_free);
+	return ret;
 }
 
 
