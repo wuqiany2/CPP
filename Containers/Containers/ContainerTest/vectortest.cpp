@@ -36,7 +36,13 @@ namespace ContainerTest
 			myv[4] = 0;
 
 			Assert::AreEqual(myv[4], 0);
+
+			Assert::AreEqual(myv.back(), 0);
 			
+			myv.back() = 3;
+
+			Assert::AreEqual(myv.back(), 3);
+
 			// TODO: Your test code here
 		}
 

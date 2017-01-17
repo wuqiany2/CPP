@@ -35,6 +35,9 @@ public:
 	void push_back(const T&);
 	T pop_back();
 
+	T& back();
+	const T& back() const;
+
 
 
 private:
@@ -110,6 +113,23 @@ inline T Vector<T>::pop_back()
 	auto ret = *(--first_free);
 	alloc.destroy(first_free);
 	return ret;
+}
+
+template<typename T>
+inline T & Vector<T>::back()
+{
+	if (!size()) throw std::out_of_range("calling back on an empty vector");
+
+	return *(first_free - 1);
+}
+
+
+template<typename T>
+inline const T & Vector<T>::back() const
+{
+	if (!size()) throw std::out_of_range("calling back on an empty vector");
+
+	return *(first_free - 1);
 }
 
 
