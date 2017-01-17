@@ -27,6 +27,7 @@ public:
 	T &operator[](size_t pos);
 	const T &operator[](size_t pos) const;
 
+	bool empty() const { return size() == 0; }
 	size_t size() const { return first_free - elements; }
 	size_t capacity() const { return cap - elements; }
 	T* begin() const { return elements; }

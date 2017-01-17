@@ -29,8 +29,8 @@ namespace ContainerTest
 
 			Assert::AreEqual(static_cast<int>(myv.size()), 5);
 
-			for (int i = 0; i < myv.size(); i++) {
-				Assert::AreEqual(myv[i], i + 1);
+			for (size_t i = 0; i < myv.size(); i++) {
+				Assert::AreEqual(myv[i], static_cast<int>(i + 1));
 			}
 
 			myv[4] = 0;
@@ -43,6 +43,11 @@ namespace ContainerTest
 
 			Assert::AreEqual(myv.back(), 3);
 
+			Assert::ExpectException<std::out_of_range>([&]() {return myv[10]; });
+
+			Vector<int> zero;
+
+			Assert::ExpectException<std::out_of_range>([&]() {return zero.back(); });
 			// TODO: Your test code here
 		}
 
