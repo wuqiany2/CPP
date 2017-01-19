@@ -19,10 +19,16 @@ public:
 	//copy constructor
 	Vector(const Vector<T>&);
 
+	//move contructor
+	Vector(Vector<T>&& other) : elements(other.elements), first_free(other.first_free), cap(other.cap){
+		//take over the resource of the other vector and set the state of the other vector to safe-to-destroy
+		other.elements = other.first_free = other.cap = nullptr;
+	};
+
 	~Vector();
 
 	Vector<T> &operator=(const Vector<T>&); // copy assignment
-	//Vector<T> &operator=(Vector<T>&&); //move assignment
+	Vector<T> &operator=(Vector<T>&&); //move assignment
 
 	T &operator[](size_t pos);
 	const T &operator[](size_t pos) const;
@@ -80,6 +86,21 @@ inline Vector<T>& Vector<T>::operator=(const Vector<T> &rhs)
 	free();
 	elements = data.first;
 	first_free = cap = data.second;
+	return *this;
+}
+
+template<typename T>
+inline Vector<T>& Vector<T>::operator=(Vector<T>&& other)
+{
+	if (&other != this) {
+		free();
+		elements = other.elements;
+		first_free = other.first_free;
+		cap = other.cap;
+		//leave other in a destructable state
+		other.elements = other.first_free = other.cap = nullptr;
+	}
+	
 	return *this;
 }
 
